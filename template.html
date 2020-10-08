@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-tw">
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <v-app>
+        <v-app-bar app color="primary" dark>
+          <v-toolbar-title>
+            中油無鉛汽油歷史與預測(CPC Unleaded Gasoline History and Prediction)
+          </v-toolbar-title>
+        </v-app-bar>
+        <v-main>
+          <v-container fluid>
+            <v-card>
+              <v-tabs vertical>
+                <v-tab>
+                  <v-icon left color="green darken-2">mdi-gas-station</v-icon>
+                  無鉛汽油 92
+                </v-tab>
+                <v-tab>
+                  <v-icon left color="amber darken-2">mdi-gas-station</v-icon>
+                  無鉛汽油 95
+                </v-tab>
+                <v-tab>
+                  <v-icon left color="red darken-2">mdi-gas-station</v-icon>
+                  無鉛汽油 98
+                </v-tab>
+                <v-tab>
+                  <v-icon left color="light-blue darken-2">
+                    mdi-cash-usd-outline
+                  </v-icon>
+                  預測
+                </v-tab>
+
+                <v-tab-item>
+                  <v-row no-gutters>
+                    <v-col
+                      xl="ma-5"
+                      lg="ma-4"
+                      md="ma-4"
+                      sm="ma-3"
+                      xs="ma-2"
+                      class="pa-2"
+                      outlined
+                      tile
+                    >
+                      <v-card flat>
+                        <v-card-text>
+                          <v-card-title>
+                            <v-icon large left color="green darken-2">
+                              mdi-table-search
+                            </v-icon>
+                            Unleaded Gasoline 92 Price
+                            <v-spacer></v-spacer>
+                            <v-text-field
+                              v-model="search"
+                              append-icon="mdi-magnify"
+                              label="Search"
+                              single-line
+                              hide-details
+                            ></v-text-field>
+                          </v-card-title>
+                          <v-data-table
+                            :headers="hisHeaders"
+                            :items="unleadedGasoline92"
+                            :search="search"
+                          ></v-data-table>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+
+                    <v-col
+                      xl="ma-6"
+                      lg="ma-5"
+                      md="ma-5"
+                      sm="ma-4"
+                      xs="ma-5"
+                      outlined
+                      tile
+                    >
+                      <line-chart :chart-data="lineChartData92"></line-chart>
+                    </v-col>
+                  </v-row>
+                </v-tab-item>
+
+                <v-tab-item>
+                  <v-row no-gutters>
+                    <v-col
+                      xl="ma-5"
+                      lg="ma-4"
+                      md="ma-4"
+                      sm="ma-3"
+                      xs="ma-2"
+                      class="pa-2"
+                      outlined
+                      tile
+                    >
+                      <v-card flat>
+                        <v-card-text>
+                          <v-card-title>
+                            <v-icon large left color="amber darken-2">
+                              mdi-table-search
+                            </v-icon>
+                            Unleaded Gasoline 95 Price
+                            <v-spacer></v-spacer>
+                            <v-text-field
+                              v-model="search"
+                              append-icon="mdi-magnify"
+                              label="Search"
+                              single-line
+                              hide-details
+                            ></v-text-field>
+                          </v-card-title>
+                          <v-data-table
+                            :headers="hisHeaders"
+                            :items="unleadedGasoline95"
+                            :search="search"
+                          ></v-data-table>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+
+                    <v-col
+                      xl="ma-6"
+                      lg="ma-5"
+                      md="ma-5"
+                      sm="ma-4"
+                      xs="ma-5"
+                      class="pa-2"
+                      outlined
+                      tile
+                    >
+                      <line-chart :chart-data="lineChartData95"></line-chart>
+                    </v-col>
+                  </v-row>
+                </v-tab-item>
+
+                <v-tab-item>
+                  <v-row no-gutters>
+                    <v-col
+                      xl="ma-5"
+                      lg="ma-4"
+                      md="ma-4"
+                      sm="ma-3"
+                      xs="ma-2"
+                      class="pa-2"
+                      outlined
+                      tile
+                    >
+                      <v-card flat>
+                        <v-card-text>
+                          <v-card-title>
+                            <v-icon large left color="red darken-2">
+                              mdi-table-search
+                            </v-icon>
+                            Unleaded Gasoline 98 Price
+                            <v-spacer></v-spacer>
+                            <v-text-field
+                              v-model="search"
+                              append-icon="mdi-magnify"
+                              label="Search"
+                              single-line
+                              hide-details
+                            ></v-text-field>
+                          </v-card-title>
+                          <v-data-table
+                            :headers="hisHeaders"
+                            :items="unleadedGasoline98"
+                            :search="search"
+                          ></v-data-table>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+
+                    <v-col
+                      xl="ma-6"
+                      lg="ma-5"
+                      md="ma-5"
+                      sm="ma-4"
+                      xs="ma-5"
+                      class="pa-2"
+                      outlined
+                      tile
+                    >
+                      <line-chart :chart-data="lineChartData98"></line-chart>
+                    </v-col>
+                  </v-row>
+                </v-tab-item>
+
+                <v-tab-item>
+                  <v-card flat>
+                    <v-card-text>
+                      <v-card-title>
+                        <v-icon large left color="light-blue darken-2">
+                          mdi-google-analytics
+                        </v-icon>
+                        Price and Trend Forecast
+                        <v-spacer></v-spacer>
+                        <v-text-field
+                          v-model="search"
+                          append-icon="mdi-magnify"
+                          label="Search"
+                          single-line
+                          hide-details
+                        ></v-text-field>
+                      </v-card-title>
+                      <v-data-table
+                        :headers="predHeaders"
+                        :items="prediction"
+                        :search="search"
+                      >
+                        <template v-slot:item.trend="{ item }">
+                          <v-icon v-if="item.trend > 0" color="red">
+                            mdi-trending-up
+                          </v-icon>
+                          <v-icon
+                            v-else-if="item.trend === 0"
+                            color="grey lighten-1"
+                          >
+                            mdi-trending-neutral
+                          </v-icon>
+                          <v-icon v-else color="green">
+                            mdi-trending-down
+                          </v-icon>
+                        </template>
+                      </v-data-table>
+                    </v-card-text>
+                  </v-card>
+                </v-tab-item>
+              </v-tabs>
+            </v-card>
+          </v-container>
+        </v-main>
+
+        <v-footer app class="caption">
+          <v-row dense>
+            <v-col class="text-right" cols="4"></v-col>
+            <v-col class="text-center">
+              國立東華大學 資工系 410521206 葉士誠
+            </v-col>
+            <v-col class="text-right" cols="4">
+              電子信箱(E-mail): 410521206@gms.ndhu.edu.tw
+            </v-col>
+          </v-row>
+        </v-footer>
+      </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
+    <script>
+      const LineChart = Vue.component('line-chart', {
+        extends: VueChartJs.Line,
+        props: {
+          options: {
+            type: Object,
+            default: null,
+          },
+        },
+        mixins: [VueChartJs.mixins.reactiveProp],
+        mounted() {
+          this.renderChart(this.chartData, this.options);
+        },
+      });
+      const v = new Vue({
+        el: '#app',
+        components: { LineChart },
+        vuetify: new Vuetify({}),
+        data() {
+          return {
+            search: '',
+            hisHeaders: [
+              { text: 'Date', value: 'date' },
+              { text: 'Price (per liter)', value: 'price' },
+            ],
+            predHeaders: [
+              {
+                text: 'Unleaded Gasoline Type',
+                align: 'start',
+                sortable: false,
+                value: 'type',
+              },
+              { text: 'Price (per liter)', value: 'price' },
+              { text: 'Trend', value: 'trend' },
+            ],
+            lineChartData92: {},
+            lineChartData95: {},
+            lineChartData98: {},
+            unleadedGasoline92: {
+              /* data_92 */
+            },
+            unleadedGasoline95: {
+              /* data_95 */
+            },
+            unleadedGasoline98: {
+              /* data_98 */
+            },
+            prediction: {
+              /* predictResult */
+            },
+          };
+        },
+        // 利用下面的function完成符合LineChart所需結構
+        mounted() {
+          this.lineChartData92 = {
+            labels: this.unleadedGasoline92.map((d) => d.date).reverse(),
+            datasets: [
+              {
+                label: 'Unleaded Gasoline 92 Price',
+                data: this.unleadedGasoline92.map((d) => d.price).reverse(),
+                pointBackgroundColor: '#388E3C',
+                backgroundColor: '#43A047',
+              },
+            ],
+          };
+          this.lineChartData95 = {
+            labels: this.unleadedGasoline95.map((d) => d.date).reverse(),
+            datasets: [
+              {
+                label: 'Unleaded Gasoline 95 Price',
+                data: this.unleadedGasoline95.map((d) => d.price).reverse(),
+                pointBackgroundColor: '#FFA000',
+                backgroundColor: '#FFB300',
+              },
+            ],
+          };
+          this.lineChartData98 = {
+            labels: this.unleadedGasoline98.map((d) => d.date).reverse(),
+            datasets: [
+              {
+                label: 'Unleaded Gasoline 98 Price',
+                data: this.unleadedGasoline98.map((d) => d.price).reverse(),
+                pointBackgroundColor: '#D32F2F',
+                backgroundColor: '#E53935',
+              },
+            ],
+          };
+        },
+      });
+    </script>
+  </body>
+</html>
